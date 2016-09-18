@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
-import { AppRegistry, ScrollView, ListView, StyleSheet, Text, TextInput, View } from 'react-native'
+import { NavigatorIOS, AppRegistry, ScrollView, ListView, StyleSheet, Text, TextInput, View } from 'react-native'
 import Checkbox from 'react-native-custom-checkbox'
 import Button from 'react-native-button'
-
 
 class Movie extends Component {
   render() {
@@ -100,7 +99,19 @@ class Greetings extends Component{
   }
 }
 
-class ExploreReactNative extends Component {
+class MoviesScene extends Component {
+  render() {
+    return (
+      <ScrollView contentContainerStyle={styles.contentContainer}>
+        <View style={styles.mainSection}>
+          <Movies from="https://facebook.github.io/react-native/movies.json" />
+        </View>
+      </ScrollView>
+    )
+  }
+}
+
+class GreetingScene extends Component {
   constructor(props) {
     super(props)
     const greetings = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
@@ -117,8 +128,8 @@ class ExploreReactNative extends Component {
 
   render() {
     return (
-     <View style={{flex:1}}>
-        <View style={{flex:2, justifyContent: 'center', padding: 0, paddingTop: 30, alignItems: 'center' }}>
+      <ScrollView contentContainerStyle={styles.contentContainer}>
+        <View style={styles.mainSection}>
           <View style={{flex: 1}}>
             <TextInput
                style={{height: 40, minWidth: 200}}
@@ -133,10 +144,21 @@ class ExploreReactNative extends Component {
           </View>
           <Greetings visible={this.state.showText} title={this.state.text}/>
         </View>
-        <View style={{flex:4, justifyContent: 'center', backgroundColor: 'skyblue'}}>
-          <Movies from="https://facebook.github.io/react-native/movies.json" />
-        </View>
-     </View>
+      </ScrollView>
+    )
+  }
+}
+
+class ExploreReactNative extends Component {
+  render() {
+    return (
+      <NavigatorIOS
+        style={styles.container}
+        initialRoute={{
+          title: 'Greeting Scene',
+          component: GreetingScene,
+        }}
+      />
     )
   }
 }
@@ -153,6 +175,16 @@ const styles = StyleSheet.create({
   red: {
     color: 'red',
   },
-})
+  contentContainer: {
+    padding: 10,
+  },
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+  },
+  mainSection: {
+    flexDirection: 'row',
+  },
+});
 
 AppRegistry.registerComponent('explorereactnative', () => ExploreReactNative);
