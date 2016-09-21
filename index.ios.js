@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, PropTypes } from 'react'
 import { NavigatorIOS, AppRegistry, ScrollView, ListView, StyleSheet, Text, TextInput, View } from 'react-native'
 import Checkbox from 'react-native-custom-checkbox'
 import Button from 'react-native-button'
@@ -7,6 +7,11 @@ class Movie extends Component {
   render() {
     return <Text>{this.props.title} | {this.props.releaseYear}</Text>
   }
+}
+
+Movie.propTypes = {
+  title: PropTypes.string.isRequired,
+  releaseYear: PropTypes.number,
 }
 
 class Movies extends Component {
@@ -52,11 +57,22 @@ class Movies extends Component {
   }
 }
 
+Movies.propTypes = {
+  from: PropTypes.string.isRequired,
+}
+
+
 class Greeting extends Component {
   render() {
     return <Text style={this.props.style}>Hello {this.props.name}!</Text>
   }
 }
+
+Greeting.propTypes = {
+  name: PropTypes.string.isRequired,
+  style: PropTypes.object,
+}
+
 
 class Greetings extends Component{
   constructor(props) {
@@ -97,6 +113,11 @@ class Greetings extends Component{
       </ScrollView>
     )
   }
+}
+
+Greetings.propTypes = {
+  title: PropTypes.string.isRequired,
+  visible: PropTypes.bool.isRequired,
 }
 
 class MoviesScene extends Component {
