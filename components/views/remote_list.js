@@ -10,6 +10,7 @@ class RemoteList extends Component {
     this.state = { items: items.cloneWithRows([]) }
 
     this.fetchItems()
+    window.setInterval(() => this.fetchItems(), this.props.interval || 5000);
   }
 
   fetchItems() {
