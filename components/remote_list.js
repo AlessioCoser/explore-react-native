@@ -1,3 +1,6 @@
+/**
+ * @providesModule remote_list
+ */
 
 import React, { Component, PropTypes } from 'react'
 import { Text, ListView, View, Button } from 'react-native'

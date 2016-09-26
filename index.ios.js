@@ -3,9 +3,9 @@ import { Navigator, TouchableHighlight, AppRegistry, ScrollView, ListView, Style
 import Checkbox from 'react-native-custom-checkbox'
 import Button from 'react-native-button'
 
-import Movie from './components/views/movie'
-import Greeting from './components/views/greeting'
-import RemoteList from './components/views/remote_list'
+import Movie from 'movie'
+import Greeting from 'greeting'
+import RemoteList from 'remote_list'
 
 
 class Greetings extends Component{

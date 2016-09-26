@@ -1,3 +1,7 @@
+/**
+ * @providesModule greeting
+ */
+
 import React, { Component, PropTypes } from 'react'
 import { Text } from 'react-native'
 
