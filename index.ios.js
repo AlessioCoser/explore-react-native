@@ -1,77 +1,11 @@
 import React, { Component, PropTypes } from 'react'
-import { NavigatorIOS, AppRegistry, ScrollView, ListView, StyleSheet, Text, TextInput, View } from 'react-native'
+import { Navigator, TouchableHighlight, AppRegistry, ScrollView, ListView, StyleSheet, Text, TextInput, View } from 'react-native'
 import Checkbox from 'react-native-custom-checkbox'
 import Button from 'react-native-button'
 
-class Movie extends Component {
-  render() {
-    return <Text>{this.props.title} | {this.props.releaseYear}</Text>
-  }
-}
-
-Movie.propTypes = {
-  title: PropTypes.string.isRequired,
-  releaseYear: PropTypes.number,
-}
-
-class Movies extends Component {
-  constructor(props) {
-    super(props)
-    const movies = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
-    this.state = { movies: movies.cloneWithRows([]) }
-    this.fetchMovies()
-  }
-
-  fetchMovies() {
-    const movies = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2})
-
-    return fetch(this.props.from)
-    .then((response) => response.json())
-    .then((responseJson) => {
-      this.setState({movies: movies.cloneWithRows(responseJson.movies) })
-    })
-    .catch((error) => {
-      console.error(error)
-    })
-  }
-
-  renderRow(movie) {
-    return <Movie title={movie.title} releaseYear={movie.releaseYear}/>
-  }
-
-  render () {
-    return (
-      <View>
-        <ListView
-          dataSource={this.state.movies}
-          renderRow={this.renderRow}
-        />
-        <Button
-          style={{fontSize: 20, color: 'green'}}
-          styleDisabled={{color: 'red'}}
-          onPress={this.fetchMovies.bind(this)}>
-          Reload Movie
-        </Button>
-      </View>
-    )
-  }
-}
-
-Movies.propTypes = {
-  from: PropTypes.string.isRequired,
-}
-
-
-class Greeting extends Component {
-  render() {
-    return <Text style={this.props.style}>Hello {this.props.name}!</Text>
-  }
-}
-
-Greeting.propTypes = {
-  name: PropTypes.string.isRequired,
-  style: PropTypes.object,
-}
+import Movie from './components/views/movie'
+import Greeting from './components/views/greeting'
+import RemoteList from './components/views/remote_list'
 
 
 class Greetings extends Component{
@@ -117,16 +51,34 @@ class Greetings extends Component{
 
 Greetings.propTypes = {
   title: PropTypes.string.isRequired,
-  visible: PropTypes.bool.isRequired,
+  visible: PropTypes.bool.isRequired
 }
 
 class MoviesScene extends Component {
+
+
+  navBack() {
+    this.props.navigator.pop()
+  }
+
+  fetchCall() {
+    this.fetchItems();
+  }
+
   render() {
     return (
       <ScrollView contentContainerStyle={styles.contentContainer}>
         <View style={styles.mainSection}>
-          <Movies from="https://facebook.github.io/react-native/movies.json" />
+          <RemoteList
+            item={Movie}
+            from="https://facebook.github.io/react-native/movies.json"
+            root="movies"
+            fetchCall={this.fetchCall}
+          />
         </View>
+        <TouchableHighlight onPress={this.navBack.bind(this)}>
+          <Text>Navigate back</Text>
+        </TouchableHighlight>
       </ScrollView>
     )
   }
@@ -147,6 +99,12 @@ class GreetingScene extends Component {
     this.setState({showText: checked})
   }
 
+  navSecond() {
+    this.props.navigator.push({
+      id: 'second'
+    })
+  }
+
   render() {
     return (
       <ScrollView contentContainerStyle={styles.contentContainer}>
@@ -164,23 +122,35 @@ class GreetingScene extends Component {
                 onChange={this.changeCheck.bind(this)}/>
           </View>
           <Greetings visible={this.state.showText} title={this.state.text}/>
+          <TouchableHighlight onPress={this.navSecond.bind(this)}>
+            <Text>Navigate to second screen</Text>
+          </TouchableHighlight>
         </View>
       </ScrollView>
     )
   }
 }
 
+
 class ExploreReactNative extends Component {
   render() {
     return (
-      <NavigatorIOS
+      <Navigator
         style={styles.container}
-        initialRoute={{
-          title: 'Greeting Scene',
-          component: GreetingScene,
-        }}
+        initialRoute={{id: 'first'}}
+        renderScene={this.navigatorRenderScene}
       />
     )
+  }
+
+  navigatorRenderScene(route, navigator) {
+    _navigator = navigator;
+    switch (route.id) {
+      case 'first':
+        return (<GreetingScene navigator={navigator} title="Greetings Scene!"/>);
+      case 'second':
+        return (<MoviesScene navigator={navigator} title="Movies Scene!" />);
+    }
   }
 }
 
@@ -204,7 +174,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   mainSection: {
-    flexDirection: 'row',
+    flexDirection: 'row'
   },
 });
 
